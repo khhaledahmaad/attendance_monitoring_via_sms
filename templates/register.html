@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>registration page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+      <div class="sidenav">
+         <div class="login-main-text">
+            <h2>LSBU |<br> Attendance Monitoring System |<br> Registration Page</h2>
+            <p>Create an account here to access.</p>
+         </div>
+      </div>
+      <div class="main">
+         <div class="col-md-6 col-sm-12">
+            <div class="register-form">
+               <form action="" method="post">
+                  <div class="form-group">
+                     <label>First Name</label>
+                     <input type="text" class="form-control" placeholder="First Name" name="first_name" value="{{
+                      request.form.first_name }}">
+                  </div>
+                  <div class="form-group">
+                     <label>Last Name</label>
+                     <input type="text" class="form-control" placeholder="Last Name" name="last_name" value="{{
+                      request.form.last_name }}">
+                  </div>
+                  <div class="form-group">
+                     <label>Email</label>
+                     <input type="text" class="form-control" placeholder="Email" name="email" value="{{
+                      request.form.email }}">
+                  </div>
+                  <div class="form-group">
+                     <label>Password</label>
+                     <input type="password" class="form-control" placeholder="Password" name="password" value="{{
+                      request.form.password }}">
+                  </div>
+                  <div class="form-group">
+                     <label>Confirm Password</label>
+                     <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" value="{{
+                      request.form.confirm_password }}">
+                  </div>
+                  <input class="btn btn-black" type="submit" aria-pressed="true" value="Create Account">
+               </form>
+               {% if message %}
+                   <p class="message"><strong>Message: </strong> {{ message }}
+               {% endif %}
+               <br/><br/>
+                <a href={{ url_for("login") }} class="btn btn-black" role="button" aria-pressed="true">Log in</a>
+                <a href={{ url_for("retpass") }} class="btn btn-info" role="button" aria-pressed="true">Forgotten Password</a>
+            </div>
+         </div>
+      </div>
+  </body>
+</html>
