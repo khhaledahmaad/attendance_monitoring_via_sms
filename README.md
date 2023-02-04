@@ -16,6 +16,9 @@ Please follow [01a_set_up_the_environments.ipynb](https://github.com/khhaledahma
 ## Home Page
 ![home](https://github.com/khhaledahmaad/attendance_monitoring_via_sms/blob/main/images/home.png)
 
+## Chart
+![chart](https://github.com/khhaledahmaad/attendance_monitoring_via_sms/blob/main/images/chart.png)
+
 ## About Page
 ![about](https://github.com/khhaledahmaad/attendance_monitoring_via_sms/blob/main/images/about.png)
 
