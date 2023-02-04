@@ -1,5 +1,3 @@
-![lsbu%20logo.png](attachment:lsbu%20logo.png)
-
 ## Configuartion
 
 Make sure you have `Python`, and `Git` configured. If not please follow the link, [Python](https://www.python.org/downloads/), and the link [Git](https://git-scm.com/downloads) to download and install seperately.
