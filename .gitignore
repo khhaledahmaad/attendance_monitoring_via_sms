@@ -1,2 +1,3 @@
-.*
-.**/
+# Ignore these file when uploading to GitHub
+.twilio/   
+*.txt
