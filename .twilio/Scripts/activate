@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\ahmedk40\Documents\attendance_monitoring_via_sms\.twilio"
+VIRTUAL_ENV="C:\Users\ahmedk40\Documents\GitHub\attendance_monitoring_via_sms\.twilio"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
