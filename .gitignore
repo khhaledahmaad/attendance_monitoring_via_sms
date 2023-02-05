@@ -1,3 +1,3 @@
-# Ignore these file when uploading to GitHub
-.twilio/   
+# Ignore these directories/files when uploading to GitHub
+./   
 *.txt
