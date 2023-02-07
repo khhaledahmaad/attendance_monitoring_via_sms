@@ -214,7 +214,7 @@ def home():
                 scale=alt.Scale(scheme='greenblue'),
                 legend=alt.Legend(title='Total Attendees')
                 )
-    ).properties(height=500, width=578, title='Total Attendees (Weekly) by Course')
+    ).properties(height=400, width=484, title='Total Attendees (Weekly) by Course')
 
     circ = rect.mark_point().encode(
         alt.ColorValue('grey'),
@@ -234,8 +234,8 @@ def home():
         y=alt.Y('total_attendees', title='Total Attendance (Weekly)'),
         color=alt.Color('academic_semester', title='Semester'),
         tooltip=['course_code', 'course_name', 'month', 'year', 'academic_semester', 'academic_week', 'total_attendees']
-    ).interactive().properties(height=500,
-                            width=578, title='Total Attendees (Weekly) by Course')
+    ).interactive().properties(height=400,
+                            width=484, title='Total Attendees (Weekly) by Course')
 
     (chart1 | chart2).save('templates/charts.html')
 
