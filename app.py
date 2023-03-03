@@ -114,11 +114,11 @@ def login():
         else:
             test = (df_logins.email.isin([email]).any()) and (df_logins.loc[df_logins.email==email, 'password'].astype(str).values[0]==password)
 
-        if test: 
+        if test:
             user_id = df_logins.loc[df_logins.email==email].index[0]
             user = User.get(str(user_id))
             login_user(user)
-            
+
             return redirect(url_for('home'))
         else:
             error = 'Invalid Credentials. Please try again. If you do not have an account, please create an account first then try logging in.'
@@ -166,7 +166,7 @@ def register():
             first_name = request.form['first_name']
             last_name = request.form['last_name']
             password = request.form['password']
-            
+
             df = df_logins.append({'first_name': first_name, 'last_name': last_name, 'email': email, 'password': password}, ignore_index=True)
             df.to_csv(credentials/'login_credentials.csv', index=False)
             message = "User created successfully. Please go back to log in."
@@ -269,9 +269,9 @@ def contact():
 # Endpoint for Student Table
 @app.route('/table1', methods=['GET'])
 @login_required
-def table1():  
+def table1():
     df = pd.read_csv(credentials/'students.csv').dropna()
-    
+
     headings = df.columns.values
     headings = tuple(headings)
 
@@ -339,7 +339,7 @@ def table5():  # put application's code here
 # Endpoint for adding new students
 @app.route('/add_students', methods=['GET', 'POST'])
 @login_required
-def add_students():  
+def add_students():
     message = None
     df_students = pd.read_csv(credentials/'students.csv')
     if request.method == 'POST':
@@ -364,10 +364,10 @@ def add_students():
         elif ((str(request.form['student_id']).isdigit())==False) or (len(request.form['student_id'])!=6):
             message = 'Student ID must be 6 digits!'
             return render_template('add_students.html', message=message)
-        elif str(request.form['email']).endswith('@lsbu.ac.uk')==False: 
+        elif str(request.form['email']).endswith('@lsbu.ac.uk')==False:
             message = 'Invalid Email! Please type a valid LSBU email.'
             return render_template('add_students.html', message=message)
-        elif df_students.email.isin([str(request.form['email'])]).any(): 
+        elif df_students.email.isin([str(request.form['email'])]).any():
                 message = 'Student Exists! Please add a different Student.'
                 return render_template('add_students.html', message=message)
         else:
@@ -375,7 +375,7 @@ def add_students():
             last_name = request.form['last_name']
             student_id = request.form['student_id']
             email = request.form['email']
-            
+
             df = df_students.append({'id': id, 'first_name': first_name, 'last_name': last_name, 'student_id': student_id,
             'email':email}, ignore_index=True)
             df.to_csv(credentials/'students.csv', index=False)
@@ -386,7 +386,7 @@ def add_students():
 # Endpoint for adding new tutors
 @app.route('/add_tutors', methods=['GET', 'POST'])
 @login_required
-def add_tutors():  
+def add_tutors():
     message = None
     df_admins = pd.read_csv(credentials/'admins.csv')
     id =len(df_admins)+1
@@ -400,10 +400,10 @@ def add_tutors():
         elif request.form['email'] == '':
             message = 'Email is required!'
             return render_template('add_tutors.html', message=message)
-        elif str(request.form['email']).endswith('@lsbu.ac.uk')==False: 
+        elif str(request.form['email']).endswith('@lsbu.ac.uk')==False:
             message = 'Invalid Email! Please type a valid LSBU email.'
             return render_template('add_tutors.html', message=message)
-        elif df_admins.email.isin([str(request.form['email'])]).any(): 
+        elif df_admins.email.isin([str(request.form['email'])]).any():
             message = 'Tutor Exists! Please add a different tutor.'
             return render_template('add_tutors.html', message=message)
         else:
@@ -416,21 +416,21 @@ def add_tutors():
                 first_name = request.form['first_name']
                 last_name = request.form['last_name']
                 email = request.form['email']
-                
-                df = df_admins.append({'id': id, 'first_name': first_name, 'last_name': last_name, 'email': email, 
+
+                df = df_admins.append({'id': id, 'first_name': first_name, 'last_name': last_name, 'email': email,
                 'description': 'Tutor', 'admin_status': 'No'}, ignore_index=True)
                 df.to_csv(credentials/'admins.csv', index=False)
                 message = "Thanks for adding a new tutor!"
                 return render_template('add_tutors.html', message=message)
             else:
                 message = 'This Account does not have the admin rights to add a new tutor. Please contact the system admin.'
-                return render_template('add_tutors.html', message=message) 
+                return render_template('add_tutors.html', message=message)
     return render_template('add_tutors.html')
 
 # Endpoint for adding new courses
 @app.route('/add_course', methods=['GET', 'POST'])
 @login_required
-def add_course():  
+def add_course():
     message = None
     df_admins = pd.read_csv(credentials/'admins.csv')
     df_courses = pd.read_csv(credentials/'courses.csv')
@@ -449,13 +449,13 @@ def add_course():
         elif request.form['email'] == '':
             message = 'Email is required!'
             return render_template('add_new_course.html', message=message, days=days, times=times, length=length)
-        elif str(request.form['email']).endswith('@lsbu.ac.uk')==False: 
+        elif str(request.form['email']).endswith('@lsbu.ac.uk')==False:
             message = 'Invalid Email! Please type a valid LSBU email.'
             return render_template('add_new_course.html', message=message, days=days, times=times, length=length)
         elif len(str(request.form['tutor_name']).split(' ')) == 1:
             message = 'Tutor Name should at least contain the firstname and surname'
             return render_template('add_new_course.html', message=message, days=days, times=times, length=length)
-        elif df_courses.course_name.isin([str(request.form['course_name'])]).any(): 
+        elif df_courses.course_name.isin([str(request.form['course_name'])]).any():
             message = 'Course Exists! Please add a different Course.'
             return render_template('add_new_course.html', message=message, days=days, times=times, length=length)
         else:
@@ -473,8 +473,8 @@ def add_course():
                 start_time = request.form['start_time']
                 duration = request.form['duration']
                 end_time = (pd.to_datetime(pd.Series([f'{start_time}'])) + pd.Timedelta(f"{duration} hour")).dt.strftime('%H:%M')[0]
-                
-                df_courses = df_courses.append({'id': id_courses, 'course_name': course_name, 'course_code': course_code, 'tutor': tutor, 
+
+                df_courses = df_courses.append({'id': id_courses, 'course_name': course_name, 'course_code': course_code, 'tutor': tutor,
                 'email': email, 'teaching_day': teaching_day, 'start_time': start_time, 'end_time': end_time}, ignore_index=True)
                 df_courses.to_csv(credentials/'courses.csv', index=False)
                 message = f"Thanks for adding a new course! The course code is: {int(course_code)}."
@@ -486,13 +486,13 @@ def add_course():
                 return render_template('add_new_course.html', message=message, days=days, times=times, length=length)
             else:
                 message = 'This Account does not have the admin rights to add a new course. Please contact the system admin.'
-                return render_template('add_new_course.html', message=message, days=days, times=times, length=length) 
+                return render_template('add_new_course.html', message=message, days=days, times=times, length=length)
     return render_template('add_new_course.html', days=days, times=times, length=length)
 
 # Endpoint for updating a courses
 @app.route('/update_course', methods=['GET', 'POST'])
 @login_required
-def update_course():  
+def update_course():
     message = None
     df_admins = pd.read_csv(credentials/'admins.csv')
     df_courses = pd.read_csv(credentials/'courses.csv')
@@ -521,7 +521,7 @@ def update_course():
             df_courses.loc[index, 'end_time'] = end_time
             df_courses.to_csv(credentials/'courses.csv', index=False)
 
-            message = f"Thanks for updating the course '{course_name}.' Please go to the 'Course List' to check the changes." 
+            message = f"Thanks for updating the course '{course_name}.' Please go to the 'Course List' to check the changes."
             return render_template('update_course.html', message=message, courses=courses, days=days, times=times, length=length)
         else:
             message = 'This Account does not have the admin rights to update a course. Please contact the system admin.'
@@ -531,7 +531,7 @@ def update_course():
 # Endpoint for creating new timetable
 @app.route('/create_timetable', methods=['GET', 'POST'])
 @login_required
-def create_timetable():  
+def create_timetable():
     message = None
     df_admins = pd.read_csv(credentials/'admins.csv')
 
@@ -610,7 +610,7 @@ def create_timetable():
 
                 last_academic_week1 = df1[df1.date_range.dt.start_time.dt.date.astype(str) == sem1_holiday_start].index.values[0]
                 last_academic_week2 = df2[df2.date_range.dt.start_time.dt.date.astype(str) == sem2_holiday_start].index.values[0]
-                
+
                 df1 = pd.concat([df1.loc[:last_academic_week1-1], df1.loc[last_academic_week1+number_of_holiday_week1:]]).reset_index(drop=True).loc[:total_academcic_week-1]
                 df2 = pd.concat([df2.loc[:last_academic_week2-1], df2.loc[last_academic_week2+number_of_holiday_week2:]]).reset_index(drop=True).loc[:total_academcic_week-1]
 
@@ -621,7 +621,7 @@ def create_timetable():
                 df1['week_end'] = df1.date_range.dt.end_time.dt.date
 
                 df1 = df1[['academic_semester', 'academic_week', 'calendar_week', 'date_range', 'week_start', 'week_end']]
-                
+
                 df2['academic_semester'] = 2
                 df2['academic_week'] = df2.index+1
                 df2['calendar_week'] = df2.date_range.dt.start_time.dt.week
@@ -648,7 +648,7 @@ def create_timetable():
 # Endpoint for creating attendance
 @app.route('/create_attendance', methods=['GET', 'POST'])
 @login_required
-def create_attendance():  
+def create_attendance():
     message = None
     df_students = pd.read_csv(credentials/'students.csv')
     df_courses = pd.read_csv(credentials/'courses.csv')
@@ -673,7 +673,7 @@ def create_attendance():
             teaching_day = df_courses.loc[df_courses.course_name == course_name, 'teaching_day'].squeeze()
             day_num_in_week = days_dict[teaching_day]
 
-            week_start = df_timetable.loc[(df_timetable.academic_semester==semester) & (df_timetable.academic_week==academic_week), 'week_start'] 
+            week_start = df_timetable.loc[(df_timetable.academic_semester==semester) & (df_timetable.academic_week==academic_week), 'week_start']
             year = (week_start + pd.DateOffset(days=day_num_in_week)).dt.year.squeeze()
             month = (week_start + pd.DateOffset(days=day_num_in_week)).dt.month.squeeze()
             month_name = (week_start + pd.DateOffset(days=day_num_in_week)).dt.month_name().squeeze()
@@ -683,7 +683,7 @@ def create_attendance():
             date = (week_start + pd.DateOffset(days=day_num_in_week)).dt.date.squeeze()
             start_hour = int(df_courses.loc[df_courses.course_name == course_name, 'start_time'].apply(lambda x: str(x)[:2]).squeeze())
             end_hour = int(df_courses.loc[df_courses.course_name == course_name, 'end_time'].apply(lambda x: str(x)[:2]).squeeze())
-            
+
             # Retrieve sms using the client object
             messages = client.messages.list(
                 date_sent_after=datetime(year, month, day, start_hour, 0, 0),
@@ -707,7 +707,7 @@ def create_attendance():
                     df['course_code'] = df.message.str.split(' ', expand=True, n=1)[1]
                 except:
                     df['course_code'] = None
-                
+
                 # function to extract student name
                 def student_name(df):
                     first_name = df_students.loc[df_students.student_id.astype(str) == df.student_id, 'first_name'].squeeze()
@@ -720,7 +720,7 @@ def create_attendance():
                 df_attendance = df.loc[(df.student_id.isin(df_students.student_id.astype(str))) & (df.course_code==str(course_code))]
                 df_attendance = df_attendance[['from', 'student_id', 'student_name', 'message', 'date_sent']]
                 df_invalid_attendance = df.loc[~(df.student_id.isin(df_students.student_id.astype(str))) | (df.course_code!=str(course_code))]
-                
+
                 file_name_raw = f'{course_code}_semester_{semester}_week_{academic_week}_raw.csv'
                 file_name_spam = f'{course_code}_semester_{semester}_week_{academic_week}_spammed.csv'
 
@@ -735,7 +735,7 @@ def create_attendance():
                     'day': day_name, 'week': week, 'academic_semester': semester, 'academic_week': academic_week, 'total_attendees': len(df_attendance)
                 }, ignore_index=True)
                 df_weekly.to_csv(processed/'weekly_attendance.csv', index=False)
-                
+
                 # Acknowledgement message to the students
                 for student in df_attendance.student_id:
                     student_name = df_students.loc[df_students.student_id.astype(str).isin([student]), 'first_name'].squeeze()
@@ -745,15 +745,15 @@ def create_attendance():
                     body = f"Hi {student_name}, congratulations! Your attendance for '{course_name}', 'semester {semester}', 'week {academic_week}' has been successfully registered.",
                     from_ = os.environ.get("TWILIO_PHONE_NUMBER"),
                     to=student_phone_no)
-                
+
                 # Email the attendance to the tutor
                 tutor_name = df_courses.loc[df_courses.course_name == course_name, 'tutor'].str.split(' ', expand=True, n=1)[0].squeeze()
                 tutor_email = df_courses.loc[df_courses.course_name == course_name, 'email'].squeeze()
                 msg = Message(f'Attendance- {course_name}, semester {semester}, week {academic_week}',
                           sender="admin@attendance.lsbu.ac.uk", recipients=[tutor_email])
                 msg.body = f"Hi {tutor_name},\n\nThe attendance for '{course_name}' for 'semester {semester}', 'week {academic_week}' has been created.\n\nPlease find the attendance attached!\n\nKind Regards,\nAttendance Team"
-                with app.open_resource(f'datasets\\processed\\attendance\\{file_name}') as fp:  
-                    msg.attach(f'datasets\\processed\\attendance\\{file_name}', "text/csv", fp.read()) 
+                with app.open_resource(f'datasets\\processed\\attendance\\{file_name}') as fp:
+                    msg.attach(f'datasets\\processed\\attendance\\{file_name}', "text/csv", fp.read())
                 mail.send(msg)
 
                 message = f"Attendance for '{course_name}' for 'semester {semester}', 'week {academic_week}' created successfully! Please go to the 'Check Attendance' page to check the attendance."
@@ -763,7 +763,7 @@ def create_attendance():
 # Endpoint for showing attendance
 @app.route('/check_attendance', methods=['GET', 'POST'])
 @login_required
-def check_attendance():  
+def check_attendance():
     message = None
     df_courses = pd.read_csv(credentials/'courses.csv')
     df_timetable = pd.read_csv(credentials/'timetable.csv', parse_dates=['week_start', 'week_end'], infer_datetime_format=True)
@@ -779,7 +779,7 @@ def check_attendance():
         file_name = f'{course_code}_semester_{semester}_week_{academic_week}_attendance.csv'
 
         if (processed/'attendance'/file_name).exists():
-        
+
             df = pd.read_csv(processed/'attendance'/file_name).dropna()
             headings = df.columns.values
             headings = tuple(headings)
@@ -795,7 +795,7 @@ def check_attendance():
 # Endpoint for showing spammed attendance
 @app.route('/check_spams', methods=['GET', 'POST'])
 @login_required
-def check_spams():  
+def check_spams():
     message = None
     df_courses = pd.read_csv(credentials/'courses.csv')
     df_timetable = pd.read_csv(credentials/'timetable.csv', parse_dates=['week_start', 'week_end'], infer_datetime_format=True)
@@ -811,7 +811,7 @@ def check_spams():
         file_name_spam = f'{course_code}_semester_{semester}_week_{academic_week}_spammed.csv'
 
         if (processed/'spam'/file_name_spam).exists():
-        
+
             df = pd.read_csv(processed/'spam'/file_name_spam).dropna(how='all')
             headings = df.columns.values
             headings = tuple(headings)
@@ -827,7 +827,7 @@ def check_spams():
 # Endpoint for displaying phone number
 @app.route('/display_number', methods=['GET', 'POST'])
 @login_required
-def display_number():  
+def display_number():
     message = None
     df_courses = pd.read_csv(credentials/'courses.csv')
     courses = df_courses.course_name.dropna().unique()
@@ -844,7 +844,7 @@ def display_number():
 # Endpoint for sending reminder
 @app.route('/send_reminder', methods=['GET', 'POST'])
 @login_required
-def send_reminder():  
+def send_reminder():
     message = None
     df_courses = pd.read_csv(credentials/'courses.csv')
     courses = df_courses.course_name.dropna().unique()
@@ -857,14 +857,14 @@ def send_reminder():
         duration = f'{start_time}-{end_time}'
 
         file_name = f'{course_code}_enrolled_students.csv'
-        
+
         df_students = pd.read_csv(credentials/'enrolled'/file_name)
         for i in range(len(df_students)):
             msg = Message(f"Attendance Reminder '{course_name}'...",
                           sender="admin@attendance.lsbu.ac.uk", recipients=[df_students.email[i]])
             msg.body = f"Hi {df_students.first_name[i]},\n\nPlease kindly register your attendance for '{course_name}' between {duration}.\n\nPlease kindly quote: '{df_students.student_id[i]} {course_code}' in your SMS and send to '{number}.'\n\nYou will receive an acknowledgment later for your attendance.\n\nShould you require any assistance, please contact your tutor.\n\nKind Regards,\nAttendance Team"
             mail.send(msg)
-        message = f"Reminder sent for '{course_name}!'" 
+        message = f"Reminder sent for '{course_name}!'"
         return render_template('send_reminder.html', message=message, courses=courses)
     return render_template('send_reminder.html', message=message, courses=courses)
 
